@@ -1,0 +1,17 @@
+---
+layout: post
+title: 
+---
+
+<h2>Stefan T. Heller</h2>
+<p>
+This is my website dedicated to my interests and what is going on in my life
+</p>
+<p>
+If you look above you will see a navigation bar with a few options to choose from. I have a blog, which may or may not be interesting to you. I have an about section which describes who I am and why I'm here. I have a link to my resume if you are here for professional reasons. And I have sections for the music I'm currently jamming to as well as the movies I think are worth a watch.
+</p>
+<p>
+If you want to contact me, I can be reached with the information in my <a href="/resume/" style="color:red;">resume</a> or you can shoot me an <a href="mailto:stefan.heller00@gmail.com" style="color:red;">email</a>. Let me know what you think of the site or anything else which you would like to talk to me about. Can't wait to hear from you.
+</p>
+-Stefan
+
