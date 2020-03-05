@@ -3,7 +3,7 @@ layout: post
 categories: posts
 title: I can count to 10 in pictures
 tags: [MachineLearning, code]
-date-string: NOVEMBER 18, 2016
+date-string: Mar 4, 2020
 ---
 # Machine Learning is cooool!
 I promised this in the last one, so here it is, a detailed explanation of one of my Machine Learning assignments. This is the first time we
@@ -31,7 +31,7 @@ import pandas as pd
 We rely on a lot of dependencies here to make this project as streamlined as possible. Most of the tools we will use will come from Keras, a ML library which
 greatly simplifies the work that goes into creating a Neural Net. This particular network is going to be what is called a 2D Convolutional Neural Network, which
 essentially means that it uses convolution to identify patterns in two dimensional inputs to increase the effectiveness of the network. To make a CNN, we rely on classes
-such as Conv2D, Flatten, etc. to provide us with key functionality, but we'll get to that in more detail later. Next we have to get all of our data and seperate it into
+such as Conv2D, Flatten, etc. to provide us with key functionality, but we'll get to that in more detail later. Next we have to get all of our data and separate it into
 training and testing inputs and outputs. This is very simple with the MNIST data, as it is built into Keras already. All we need to write is
 ```python
 (tr_in, tr_out), (tst_in, tst_out) = mnist.load_data()
@@ -44,7 +44,7 @@ this is very straight forward and can be done simply in 2 lines:
 tr_in = tr_in / 255
 tst_in = tst_in / 255
 ```
-Our next step is to resize our data into a vector of a dimensionality that makes sense for 2-dimensional convolution, once agian this is simple, althoug the values take a minute to
+Our next step is to resize our data into a vector of a dimensionality that makes sense for 2-dimensional convolution, once again this is simple, although the values take a minute to
 wrap your head around. <span style="color:orange;">tr_in.shape[0]</span> gives us the number of inputs and 28 is the width and height of each image.
 ```python
 tr_in = tr_in.reshape(tr_in.shape[0], 28, 28, 1)
@@ -61,7 +61,7 @@ tst_out = np_utils.to_categorical(tst_out, num_classes)
 where <span style="color:orange;">num_classes</span> is the total number of options between 0-9, thus 10.
 <p/>
 Now we come across the most difficult part of this entire quest, creating the model. This is a mainly trial and error process, and it's very possible you could build a model slightly
-more accurate than mine, if so I congradulate you. My model consists of 4 2D convolutional layers, 2 pooling layers, and a dense layer.
+more accurate than mine, if so I congratulate you. My model consists of 4 2D convolutional layers, 2 pooling layers, and a dense layer.
 ```python
 def create_model():
 # create model
@@ -84,10 +84,10 @@ def create_model():
 What we need to focus on here is our number of layers, types of layers, input shape, activations, loss function, optimizer, and metrics... so a lot. As for the layers, this is the
 combination I found to work best for me. I use 4 convolutional filters to find patterns in the images, and then pool them twice. I throw in a couple dropouts to make sure my model isn't moving
 in a direction which could slow or impede its progress. I flatten out the 2D data before finally puting it through a traditional dense layer and then normalize it once more for a 10 parameter output.
-I find Adam to be the most effective optimizer for my purposes, and as for loss function and accuracy, categorical crossentropy and 'acc' are simple and effective functions for categorical outputs like we
+I find Adam to be the most effective optimizer for my purposes, and as for loss function and accuracy, categorical cross entropy and 'acc' are simple and effective functions for categorical outputs like we
 have here.
 <p/>
-We then have to train model on our input data and evaluate it against our test data. We do this using the fit and evaluate funtions build into Keras.
+We then have to train model on our input data and evaluate it against our test data. We do this using the fit and evaluate functions build into Keras.
 ```python
 model = create_model()
 history = model.fit(tr_in, tr_out, batch_size = batch_size, epochs = epochs, validation_split = .1)
@@ -95,7 +95,7 @@ eval = model.evaluate(tst_in, tst_out)
 ```
 ![Output](/images/output.jpg)
 When we run our code, this is the output we see. Over a measly 2 epochs, we see a testing accuracy of 97.2% which is a pretty reasonable accuracy for such a simplistic network. I find that if I run my program
-multiple times, I find that my accuracy varies anywhere from 97-99%. There's a lot to be learned here, but overall I would call this a very succesful first interesting project.
+multiple times, I find that my accuracy varies anywhere from 97-99%. There's a lot to be learned here, but overall I would call this a very successful first interesting project.
 
 <p/>
 My next post should be less technical than this, but if you found this interesting and would like me to do more similar to it, let me know.
