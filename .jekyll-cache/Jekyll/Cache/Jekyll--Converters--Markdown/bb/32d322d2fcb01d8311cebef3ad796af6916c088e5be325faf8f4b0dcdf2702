@@ -1,0 +1,63 @@
+I"r<h1 id="so-yeah-i-was-gone-but-now-im-back">So yeah, I was gone, but now I’m back</h1>
+<p>I have been pretty busy with video games and school and external projects, but I think I’m back now. I plan on
+making some pretty significan changes to this site in the near future, so stay tuned… :)</p>
+
+<h2 id="a-new-series">A new series</h2>
+<p>I recently subscribed to a service <a href="https://www.dailycodingproblem.com">linked here</a> which sends me a coding problem everyday. I’ve decided to blog about them here.
+The way the service works, you start easy and it gets progressively harder, so for a while the problems are going to
+be pretty easy, but I will be implementing all the solutions in JavaScript, which is a fairly new language for me, so this
+will be a fun exercise.</p>
+
+<h2 id="problem-1">Problem 1:</h2>
+<blockquote>
+  <p>Good morning! Here’s your coding interview problem for today. This problem was recently asked by Google. Given a list of numbers and a number k, return whether any two numbers from the list add up to k. For example, given [10, 15, 3, 7] and k of 17, return true since 10 + 7 is 17.</p>
+</blockquote>
+
+<blockquote>
+  <p>Bonus: Can you do this in one pass?</p>
+</blockquote>
+
+<h2 id="my-solution">My solution:</h2>
+<p>To solve this fairly trivial problem I first want to break the problem down. What is the input? What is the output? What are the constraints?</p>
+
+<h3 id="input">Input:</h3>
+<p>An array of integers we’ll call <code class="language-plaintext highlighter-rouge">arr</code>
+An integer tarket we’ll call <code class="language-plaintext highlighter-rouge">k</code></p>
+
+<h3 id="goal">Goal:</h3>
+<p>Return true if 2 numbers in <code class="language-plaintext highlighter-rouge">arr</code> add to <code class="language-plaintext highlighter-rouge">k</code>, else return false</p>
+
+<h3 id="constraints">Constraints:</h3>
+<p>Do this in one pass, and be as efficient as possible</p>
+
+<h3 id="time-to-write-some-code">Time to write some code</h3>
+<p>I decided that my optimal solution would be one in which we only make 1 pass, as that would make the complexity <strong>O(n)</strong> which is acceptable.
+I think the best way to do this is to use a JavaScript Set, which is the JS implementation of a hash set. We love hash sets because of their <strong>O(1)</strong>
+lookup times.</p>
+
+<p>First I’ll just define my array
+<code class="language-plaintext highlighter-rouge">const arr = [10, 15, 3, 7]</code>
+Next I’ll define my results function using a fancy JavaScript arrow function</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="c1">//define array</span>
+
+<span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">lookup</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Set</span><span class="p">()</span> <span class="c1">// define a set</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">num</span> <span class="k">of</span> <span class="nx">lst</span><span class="p">){</span> <span class="c1">// loop through array</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">lookup</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">num</span><span class="p">))</span> <span class="c1">// check set for value</span>
+            <span class="k">return</span> <span class="kc">true</span>
+        <span class="nx">lookup</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">k</span><span class="o">-</span><span class="nx">num</span><span class="p">)</span> <span class="c1">// add the missing value to set</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">false</span>
+<span class="p">}</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">(</span><span class="nx">arr</span><span class="p">))</span> <span class="c1">// output results</span>
+</code></pre></div></div>
+<p>What I’ve done here is iterate through the array and check to see if the value in the list is in our set, if it is we return true.
+But why does this work? It works because we are not adding the number to the set, instead we are adding (k-num) which means that when
+we look at the set, we are only checking to see if our current value in the array is the value we need to add up to k.</p>
+
+<p>And thus we have a <strong>O(n)</strong>, one pass algorithm written and done in Javascript.</p>
+
+<p>On to the next…</p>
+
+:ET

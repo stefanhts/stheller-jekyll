@@ -16,7 +16,7 @@ which you can use to test your networks and learn about ML. In this assignment w
 
 This is what the input data look like in their raw form before we transform them into something more useful for our purposes.
 <p/>
-Before we can do anything of any significance, we have to import all the libraries that will carry us on our shoulders during this whirlwind of a journey.
+Before we can do anything of any significance, we have to import all the libraries that will carry us on their shoulders during this whirlwind of a journey.
 ```python
 import tensorflow
 from keras.models import Sequential
