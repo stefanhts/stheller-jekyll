@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Stefan T. Heller</title>
+    <description>A site about my daily activities, musings, and experiences</description>
+    <link>/</link>
+    <atom:link href="nathanrooy.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 09 Mar 2021 13:54:25 -0500</pubDate>
+    <lastBuildDate>Tue, 09 Mar 2021 13:54:25 -0500</lastBuildDate>
+    <generator>Jekyll v4.2.0</generator>
+      
+    
+    <item>
+        <title>And We're Back</title>
+        <description>&lt;h1 id=&quot;so-yeah-i-was-gone-but-now-im-back&quot;&gt;So yeah, I was gone, but now I’m back&lt;/h1&gt;
+&lt;p&gt;I have been pretty busy with video games and school and external projects, but I think I’m back now. I plan on
+making some pretty significan changes to this site in the near future, so stay tuned… :)&lt;/p&gt;
+
+&lt;h2 id=&quot;a-new-series&quot;&gt;A new series&lt;/h2&gt;
+&lt;p&gt;I recently subscribed to a service &lt;a href=&quot;https://www.dailycodingproblem.com&quot;&gt;linked here&lt;/a&gt; which sends me a coding problem everyday. I’ve decided to blog about them here.
+The way the service works, you start easy and it gets progressively harder, so for a while the problems are going to
+be pretty easy, but I will be implementing all the solutions in JavaScript, which is a fairly new language for me, so this
+will be a fun exercise.&lt;/p&gt;
+
+&lt;h2 id=&quot;problem-1&quot;&gt;Problem 1:&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Good morning! Here’s your coding interview problem for today. This problem was recently asked by Google. Given a list of numbers and a number k, return whether any two numbers from the list add up to k. For example, given [10, 15, 3, 7] and k of 17, return true since 10 + 7 is 17.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Bonus: Can you do this in one pass?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;my-solution&quot;&gt;My solution:&lt;/h2&gt;
+&lt;p&gt;To solve this fairly trivial problem I first want to break the problem down. What is the input? What is the output? What are the constraints?&lt;/p&gt;
+
+&lt;h3 id=&quot;input&quot;&gt;Input:&lt;/h3&gt;
+&lt;p&gt;An array of integers we’ll call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;arr&lt;/code&gt;
+An integer tarket we’ll call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;k&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;goal&quot;&gt;Goal:&lt;/h3&gt;
+&lt;p&gt;Return true if 2 numbers in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;arr&lt;/code&gt; add to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;k&lt;/code&gt;, else return false&lt;/p&gt;
+
+&lt;h3 id=&quot;constraints&quot;&gt;Constraints:&lt;/h3&gt;
+&lt;p&gt;Do this in one pass, and be as efficient as possible&lt;/p&gt;
+
+&lt;h3 id=&quot;time-to-write-some-code&quot;&gt;Time to write some code&lt;/h3&gt;
+&lt;p&gt;I decided that my optimal solution would be one in which we only make 1 pass, as that would make the complexity &lt;strong&gt;O(n)&lt;/strong&gt; which is acceptable.
+I think the best way to do this is to use a JavaScript Set, which is the JS implementation of a hash set. We love hash sets because of their &lt;strong&gt;O(1)&lt;/strong&gt;
+lookup times.&lt;/p&gt;
+
+&lt;p&gt;First I’ll just define my array
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;const arr = [10, 15, 3, 7]&lt;/code&gt;
+Next I’ll define my results function using a fancy JavaScript arrow function&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//define array&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lookup&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// define a set&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// loop through array&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;lookup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;has&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// check set for value&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;lookup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// add the missing value to set&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// output results&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;What I’ve done here is iterate through the array and check to see if the value in the list is in our set, if it is we return true.
+But why does this work? It works because we are not adding the number to the set, instead we are adding (k-num) which means that when
+we look at the set, we are only checking to see if our current value in the array is the value we need to add up to k.&lt;/p&gt;
+
+&lt;p&gt;And thus we have a &lt;strong&gt;O(n)&lt;/strong&gt;, one pass algorithm written and done in Javascript.&lt;/p&gt;
+
+&lt;p&gt;On to the next…&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 09 Mar 2021 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2021-03-09/And-Were-Back.html</link>
+          
+        
+            <category>thecomebackstory</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>I can count to 10 in pictures</title>
+        <description>&lt;h1 id=&quot;machine-learning-is-cooool&quot;&gt;Machine Learning is cooool!&lt;/h1&gt;
+&lt;p&gt;I promised this in the last one, so here it is, a detailed explanation of one of my Machine Learning assignments. This is the first time we
+have had a somewhat challenging, both computationally and intellectually, assignment and boy is it cool. Machine Learning has become a really
+big thing over the last couple decades, and to contribute to its growth there have been many databases built which contain massive amounts of data
+which you can use to test your networks and learn about ML. In this assignment we used a 60000 data point set which contained hand written digits from
+0-9. The idea of the assignment was to create a network which could correctly classify the digit written.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/digit_ex.png&quot; alt=&quot;Digit array&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is what the input data look like in their raw form before we transform them into something more useful for our purposes.&lt;/p&gt;
+&lt;p /&gt;
+
+&lt;p&gt;Before we can do anything of any significance, we have to import all the libraries that will carry us on their shoulders during this whirlwind of a journey.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tensorflow&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keras.models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Sequential&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keras.layers&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Conv2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flatten&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dropout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MaxPooling2D&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keras.optimizers&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Adam&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keras.datasets&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mnist&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keras.utils&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to_categorical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np_utils&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;keras.callbacks&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;History&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;We rely on a lot of dependencies here to make this project as streamlined as possible. Most of the tools we will use will come from Keras, a ML library which
+greatly simplifies the work that goes into creating a Neural Net. This particular network is going to be what is called a 2D Convolutional Neural Network, which
+essentially means that it uses convolution to identify patterns in two dimensional inputs to increase the effectiveness of the network. To make a CNN, we rely on classes
+such as Conv2D, Flatten, etc. to provide us with key functionality, but we’ll get to that in more detail later. Next we have to get all of our data and separate it into
+training and testing inputs and outputs. This is very simple with the MNIST data, as it is built into Keras already. All we need to write is&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tr_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tst_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mnist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;load_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;This is a simple and quick method to sort out our inputs and outputs, now we can move on to more interesting things.&lt;/p&gt;
+&lt;p /&gt;
+
+&lt;p&gt;We start by normalizing and resizing our data in a way that our network can handle. Each pixel in our image will contain a value between 0-255, but we want this to be 0-1,
+this is very straight forward and can be done simply in 2 lines:&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;255&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;255&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Our next step is to resize our data into a vector of a dimensionality that makes sense for 2-dimensional convolution, once again this is simple, although the values take a minute to
+wrap your head around. &lt;span style=&quot;color:orange;&quot;&gt;tr_in.shape[0]&lt;/span&gt; gives us the number of inputs and 28 is the width and height of each image.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reshape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;astype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'float32'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reshape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;astype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'float32'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Next, we use One-Hot encoding to turn our training and testing output vectors into a size 10 output which contains the boolean value of which digit the image represents.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;num_classes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tr_out&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np_utils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_categorical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tr_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num_classes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;tst_out&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np_utils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_categorical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tst_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num_classes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;where &lt;span style=&quot;color:orange;&quot;&gt;num_classes&lt;/span&gt; is the total number of options between 0-9, thus 10.&lt;/p&gt;
+&lt;p /&gt;
+
+&lt;p&gt;Now we come across the most difficult part of this entire quest, creating the model. This is a mainly trial and error process, and it’s very possible you could build a model slightly
+more accurate than mine, if so I congratulate you. My model consists of 4 2D convolutional layers, 2 pooling layers, and a dense layer.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;create_model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# create model
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Sequential&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Conv2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;input_shape&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'relu'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Conv2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;38&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'relu'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dropout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MaxPooling2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Conv2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;28&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'selu'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Conv2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;52&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'selu'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dropout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MaxPooling2D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Flatten&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'selu'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dense&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;activation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'softmax'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# Compile model
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;compile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;loss&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'categorical_crossentropy'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;optimizer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'adam'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metrics&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'acc'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;What we need to focus on here is our number of layers, types of layers, input shape, activations, loss function, optimizer, and metrics… so a lot. As for the layers, this is the
+combination I found to work best for me. I use 4 convolutional filters to find patterns in the images, and then pool them twice. I throw in a couple dropouts to make sure my model isn’t moving
+in a direction which could slow or impede its progress. I flatten out the 2D data before finally puting it through a traditional dense layer and then normalize it once more for a 10 parameter output.
+I find Adam to be the most effective optimizer for my purposes, and as for loss function and accuracy, categorical cross entropy and ‘acc’ are simple and effective functions for categorical outputs like we
+have here.&lt;/p&gt;
+&lt;p /&gt;
+
+&lt;p&gt;We then have to train model on our input data and evaluate it against our test data. We do this using the fit and evaluate functions build into Keras.&lt;/p&gt;
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create_model&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;history&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tr_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tr_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;batch_size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;batch_size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epochs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epochs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;validation_split&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tst_in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tst_out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;img src=&quot;/images/output.jpg&quot; alt=&quot;Output&quot; /&gt;
+When we run our code, this is the output we see. Over a measly 2 epochs, we see a testing accuracy of 97.2% which is a pretty reasonable accuracy for such a simplistic network. I find that if I run my program
+multiple times, I find that my accuracy varies anywhere from 97-99%. There’s a lot to be learned here, but overall I would call this a very successful first interesting project.&lt;/p&gt;
+
+&lt;p /&gt;
+
+&lt;p&gt;My next post should be less technical than this, but if you found this interesting and would like me to do more similar to it, let me know.&lt;/p&gt;
+
+&lt;p&gt;See ya in the next one,
+&lt;br /&gt;
+Stefan&lt;/p&gt;
+</description>
+        <pubDate>Wed, 04 Mar 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-03-04/i-can-count-to-ten.html</link>
+          
+        
+            <category>MachineLearning</category>
+        
+            <category>code</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>What do the Coronavirus and web apps have in common?</title>
+        <description>&lt;h1 id=&quot;lots-to-cover-in-this-one-cuz-its-been-a-while&quot;&gt;Lots to cover in this one, cuz its been a while&lt;/h1&gt;
+&lt;h2 id=&quot;lets-start-with-the-title-what-do-the-coronavirus-and-web-apps-have-in-common&quot;&gt;Let’s start with the title: “What do the Coronavirus and web apps have in common?”&lt;/h2&gt;
+&lt;p&gt;The answer is that they’re both on my mind. If there’s one truth I know to be universal,
+it’s that Reddit is both the best and the worst place that exists. I spend an amount of time I am not willing
+to publicly admit on Reddit. It has everything from top tier memes to top tier conspiracy theories and more. What I recently stumbled on
+is the subreddit &lt;a href=&quot;https://reddit.com/r/Coronavirus&quot;&gt;r/Coronavirus&lt;/a&gt; which has all of the most recent news and theories regarding the
+novel Coronavirus. It is, to be completely honest, a terrifying but addicting place to be. I have been attached to the page non stop for about a
+week now, and I am more aware of the end of times pandemic around us than any of my peers. So yeah, I’m pretty concerned about what will happen in
+the U.S. as far as infections and transmission. I’m not scared for myself though, I am worried about my family, specifically a few family members who
+are very susceptible to disease. I really hope that we find some way of dealing with this, or that it doesn’t get as bad as I think it’s going to.
+I guess we’ll find out…
+&lt;br /&gt;
+As for the web apps part… After a recent conversation with my roommate, we have come to the decision that we want to build a web app in python, likely
+using Django to hone our skills and get some cool experience. The problem is that we don’t yet know what we want to build, although I just came up
+with and idea and I’m curious what he’ll think about it. My idea is to build some sort of Spotify client using the Spotify API. My roommate and I both have
+a real passion for music, and I think this could be a really cool project. I think I might try to build something where you upload your playlists and people
+can rate and review playlists and maybe there will be some sort of music recommendation page… Idk yet but the idea is growing in my head at the moment.&lt;/p&gt;
+
+&lt;h2 id=&quot;in-other-news&quot;&gt;In other news…&lt;/h2&gt;
+&lt;p&gt;For my machine learning class we have graduated to something much more interesting than the number of rings on the shell of an abalone snail.
+This time we are creating a Convolutional Neural Net (basically it detects patterns, but it’s more nuanced than that), which will be able to identify
+hand written digits as their correct categorization with ~97% accuracy. I plan to have an entire post on that, which will go into much more detail and
+show some of the code I wrote for it.&lt;/p&gt;
+
+&lt;h3 id=&quot;little-thing-i-have-noticed-recently&quot;&gt;Little thing I have noticed recently:&lt;/h3&gt;
+&lt;p&gt;I have gotten so much better at typing, it’s wild. Sometimes I put /s instead of ‘s, but for the most part I put almost no effort into thinking about where
+my fingers are going to go and instead think about what I am saying. This might not be a very novel skill for most people, but I’m actually quite impressed with
+the progression of my typing skills.&lt;/p&gt;
+
+&lt;h3 id=&quot;tldr-coronavirus-is-scary-i-want-to-build-a-music-web-app-machine-learning-is-cool-and-i-can-type-like-a-normal-person-i-guess&quot;&gt;TL;DR: Coronavirus is scary, I want to build a music web app, machine learning is cool, and I can type like a normal person I guess…&lt;/h3&gt;
+
+&lt;p&gt;See ya in the next one,
+Stefan&lt;/p&gt;
+</description>
+        <pubDate>Tue, 03 Mar 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-03-03/coronavirus-and-webapps.html</link>
+          
+        
+            <category>lotsonmymind</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>Ladies and Gentlemen, We Got Him</title>
+        <description>&lt;h1 id=&quot;i-did-it-folks&quot;&gt;I did it folks&lt;/h1&gt;
+&lt;p&gt;Somehow I managed to finish my formal lab report, grading all my exams, and it’s not even 2am yet. This is what we call a &lt;b&gt;&lt;i&gt;success&lt;/i&gt;&lt;/b&gt; story. This was the 1 and only formal lab report of the semester for me, and I think this might have been the busiest I will be all semester. Here’s hoping anyway…&lt;/p&gt;
+
+&lt;p&gt;So for an update, I still have a midterm, technically tomorrow, in Economics. I have not studied at all yet and honestly I don’t plan to study much, but we’ve got a strong 32 hours or so, so the world really is my oyster. What a strange saying…&lt;/p&gt;
+
+&lt;p&gt;For the rest of the week I will be working on my 9 problems of Quantum Mechanics homework. A little fun tidbit about this one, our professor informed us that 1 of the problems took him, a Ph.d. professional physicist, over 6 hours to complete. So this is going to be an interesting assignment. We also have our first midterm in the class on Monday and it’s going to be a wild ride.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-unfortunate-truth-about-taing&quot;&gt;The unfortunate truth about TAing&lt;/h2&gt;
+&lt;p&gt;Other than the intense anxiety that TAing causes me, it’s not the worst gig, for the most part I can choose my own hours, and work as much or as little as I find necessary. I don’t get paid a lot, but it’s a convenient job and I’m not mad at that.&lt;/p&gt;
+
+&lt;p&gt;This is where the fun stops though. Not only is grading exams tedious and time consuming, it is extremely disheartening and depressing. A friend recommended I share this, because most people don’t get to see the other side of teaching. I had to give my first failing grade to a student on an exam tonight. It was one of the worst feelings I have experienced. I wanted so much to be able to converse with the student or find some way to fix their grade and make it a little less severe, but the grading is pretty binary, and it would be unfair to other students if I were to change the grading for an individual student.&lt;/p&gt;
+
+&lt;p&gt;The entire time I was grading that first failing exam I could tell what was going to happen before I actually did the math on their score. I couldn’t help but imagine myself being the student receiving that grade. I have been there, and the stomach drop is sickening like almost nothing else I’ve experienced.&lt;/p&gt;
+
+&lt;p&gt;I’m not sure how I’m going to adapt to this reality of having to give really horrible grades to good people. I simultaneously hope and fear that it will become easier in the future. Here’s hoping no one in my class ever fails another exam. That would be the happiest outcome for all of us.&lt;/p&gt;
+
+&lt;h3 id=&quot;anyway&quot;&gt;Anyway&lt;/h3&gt;
+&lt;p&gt;This hasn’t been a very structured blog. I’ve kind of just let my stream of consciousness out. I hope this sheds light on what it’s like to be the person doing the grading, but I don’t know. Events like this leave me unsure of my convictions and I’m going to have to think about this for a while before I know exactly how to feel.&lt;/p&gt;
+
+&lt;h3 id=&quot;tldr-i-finished-my-work-but-theres-more-obviously-also-grading-is-hard-and-boring-but-also-very-disheartening&quot;&gt;TL;DR: I finished my work, but there’s more obviously. Also grading is hard and boring, but also very disheartening.&lt;/h3&gt;
+</description>
+        <pubDate>Wed, 26 Feb 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-02-26/We-got-him.html</link>
+          
+        
+            <category>weehoursofthemorning</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>I love the smell of Mckeldin in the morning</title>
+        <description>&lt;h1 id=&quot;and-by-morning-i-mean-like-2-am&quot;&gt;And by morning I mean like 2 am&lt;/h1&gt;
+&lt;p&gt;Another week is ushered in by watching the hours tick away as I sit in the somehow ever crowded study areas of Mckeldin Library. For the uninitiated, Mckeldin is the massive library/study arena where the masses go to pretend to work on homework. In reality most of us are significantly less productive when working in groups in a loud social setting, but don’t tell us that, we might get &lt;span style=&quot;color:red&quot;&gt;#triggered&lt;/span&gt;. I find myself here much too late at night, much too often. I tell myself I’m doing homework, but really I’m writing my notes for tomorrow’s discussion for 20 minutes and then applying for jobs I’ll never get for a couple hours. This continues until I realize how much time has gone by, internally scream in frustration and depressive rage, and then repeat the cycle as I come to grips with the fact that I will never actually get anything done. This is the life of a college student, we get boatloads of homework which take us days to finish, not because they’re that hard, but because we’re that worn out and distracted.
+&lt;br /&gt;
+For all of recorded history people have bashed on &lt;span style=&quot;color:blue&quot;&gt;freshmen&lt;/span&gt; for being naive, stupid, scum of the Earth, just the absolute worst, worthless garbage… I could go on. Honestly though, I think the only distinction between &lt;span style=&quot;color:blue&quot;&gt;freshmen&lt;/span&gt; and everyone else is that they haven’t given up yet. God speed young ones, I wish you a swift and painless death of all hope.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 23 Feb 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-02-23/B-I-love-the-smell-of-Mckeldin-in-the-morning.html</link>
+          
+        
+            <category>schoolisrough</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>I swear good things happen to me sometimes... but not this time</title>
+        <description>&lt;h1 id=&quot;im-not-lying-i-promise&quot;&gt;I’m not lying I promise&lt;/h1&gt;
+&lt;p&gt;If I were the one reading this, I would be certain that everything here is made up, but sadly it is not. Shortly after writing yesterday’s post about how miserable my week had been and how much work I had, it managed to get significantly worse.
+Last night I went bowling and had a grand old time. That is, until I went to grab my wallet from the table with all my stuff on it. I realized in that moment that I had gravely miscalculated both the kindness of those around me and my own skills of observation. Sometime during my skillful bowling session someone must have come up behind me and snatched my wallet out from under my nose.
+So that’s where I find myself now. I have no way of paying for anything seeing as I have no cash, no debit card, no credit card, I don’t even have my driver’s license. You really love to see it. The wallet had about $40 in cash, $200 in gift cards and a priceless picture of my mother.
+I canceled all of my cards and now I just have to wait until I get new ones and get the time to go to some MVA terminal to get a new license. I could care less about the $40 and the gift cards I would probably have never used, but odds are that I’ll never get that picture back and now I have to go through the hassle of getting new versions of all my important credentials (ID, insurance card, etc.).
+I like to think that I have at least 1 funny line in each post, but for the life of me I can’t find anything funny about this situation. I’m just fed up and frustrated.
+In the end it’s really my fault for being so naive. To quote the great philosopher Kanye West:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;“[I] left my fridge open, somebody just took a sandwich”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;updates-on-everything-else&quot;&gt;Updates on everything else:&lt;/h2&gt;
+&lt;p&gt;I still have not heard back from AWS, still haven’t started my lab report, and I’m still drowning in work. So yeah, that’s where I find myself at the current moment.&lt;/p&gt;
+
+&lt;h3 id=&quot;tldr-someone-took-my-wallet-aws-left-me-on-read-and-i-still-have-a-lot-of-homework&quot;&gt;TL;DR: Someone took my wallet. AWS left me on read, and I still have a lot of homework.&lt;/h3&gt;
+</description>
+        <pubDate>Sun, 23 Feb 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-02-23/A-I-swear-sometimes-good-things-happen.html</link>
+          
+        
+            <category>gottalovepeople</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>Busy Bee Being Busy</title>
+        <description>&lt;h1 id=&quot;oh-man-another-week-for-the-books-where-do-i-start-with-this-one&quot;&gt;Oh man, another week for the books, where do I start with this one?&lt;/h1&gt;
+&lt;h3 id=&quot;the-joy-of-account-compromise&quot;&gt;The joy of account compromise&lt;/h3&gt;
+&lt;p&gt;I guess I’ll start with what happened last weekend, shortly after making this site I woke up to a phone call from Seattle, Washington, which I ignored of course. Then after checking my email, as one does on a Sunday morning, I realized the call was coming from Amazon Web Services (AWS for short), whom I employ to host this website. It seemed that in my infinite wisdom I had somehow allowed my account to become compromised and there was now someone opening virtual machine computing instances all over the globe. The kind fellow behind this intrusion racked up about $2500 in charges in a couple hours which, as a College Student,&lt;br /&gt; is well within my budget. &lt;span style=&quot;color:orange&quot;&gt;/s&lt;/span&gt; AWS customer support was actually quite helpful and guided me through securing my account and stopping all of the fella’s running items. I am now waiting on the AWS billing team to decide whether or not to refund me that money and give me access to my account again. Hopefully they decide within the next millennia, because this is starting to not be a fun experience.&lt;/p&gt;
+
+&lt;h3 id=&quot;i-bet-you-i-know-more-about-snails-than-you-do&quot;&gt;I bet you I know more about snails than you do&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;“Oh, hello there miss, I bet I can predict the number of rings on the shell of an abalone snail with 26.3% accuracy as long as you provide me with weight of its shell, dried entrails, dried viscera, bled body, and sex!”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;i&gt; Who ever said computer science couldn’t get you girls? &lt;/i&gt;
+Ok, let me explain a little. This semester I am taking a class on machine learning. For those who are unaware, the idea behind machine learning is basically that given enough data and powerful enough libraries written by people much smarter than you, you can train an algorithm, or more accurately do a lot of math to make an algorithm that can predict outcomes with really high accuracy. It’s a very powerful tool and I find it extremely interesting, but just like with any other discipline, you have to wade through the muck to get to a point where you are doing anything really fascinating.&lt;/p&gt;
+
+&lt;p&gt;Anyway, this week my class got its first assignment where we were supposed to make a neural network (NN) which could predict the age of an abalone snail based off some other criteria. While I must admit, there are things I find more interesting than snails, I won’t pretend like this is not one of the coolest bits of code I have ever written. It’s still a work in progress though, maybe when it gets a little better, or when I do something more interesting, I’ll post my actual code and output, we’ll see.&lt;/p&gt;
+
+&lt;h3 id=&quot;as-for-the-rest-of-the-week&quot;&gt;As for the rest of the week&lt;/h3&gt;
+&lt;p&gt;It’s going to be a rough weekend. I have to grade 40 exams, write a very legit formal lab report, do an exorbitant amount of Statistical Mechanics work, and study for 2 midterms, but I’m sure there will be tons of time for fun and games in there somewhere (there will not be).&lt;/p&gt;
+
+&lt;h3 id=&quot;tldr-my-aws-account-got-hacked-and-it-was-a-big-not-yet-resolved-hassle-im-mister-steal-yo-girl-if-shes-at-all-interested-in-the-number-of-rings-on-the-shell-of-an-abalone-snail-and-i-have-way-too-much-homework-what-else-is-new&quot;&gt;TL;DR: My AWS account got hacked and it was a big, not yet resolved hassle, I’m mister steal yo girl (if she’s at all interested in the number of rings on the shell of an abalone snail), and I have way too much homework. What else is new?&lt;/h3&gt;
+
+&lt;p&gt;See ya in the next one&lt;/p&gt;
+</description>
+        <pubDate>Sat, 22 Feb 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-02-22/Busy-Bee-Being-Busy.html</link>
+          
+        
+            <category>schoolisrough</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>Here goes nothing</title>
+        <description>&lt;h1 id=&quot;well-here-goes-nothing&quot;&gt;Well here goes nothing&lt;/h1&gt;
+&lt;p&gt;This is my first blog post. I am currently sitting in the common room of my suite, building this site and simultaneously trying to figure out exactly what I want it to be. I think I am going to go for something similar to what my friend Noah has built. I would link to his site, but then the few people who might be reading this would go over and look at his work which is undeniably better than mine, but I digress.&lt;/p&gt;
+&lt;h2 id=&quot;what-a-week-its-been&quot;&gt;What a week it’s been&lt;/h2&gt;
+&lt;p&gt;The week started out normal, my birthday was on Thursday, so I was excited for that to come. The big &lt;strong&gt;TWO ZERO&lt;/strong&gt; as they say, I don’t think anyone says that, but hey it’s my blog so I can say whatever I want. Anyway, come Wednesday I started to feel a little under the weather, but I shook it off and carried on with my schoolwork. I woke up Thursday morning with a mild fever of &lt;strong&gt;100.5&lt;/strong&gt; and felt like utter garbage. My whole body hurt, and it was almost impossible to swallow. What a birthday this was going to be. I went to the University Health Center, an organization known for their medical prowess &lt;span style=&quot;color:orange;&quot;&gt;/s&lt;/span&gt; (this is internet short hand indicating sarcasm for those who are unfamiliar). I was eventually diagnosed with&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;“Influenza-like illness”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;and I was given a prescription for Tamiflu, which is ridiculously expensive even if you have good insurance, the life of a college student is fill with monetary trials and tribulations.&lt;/p&gt;
+
+&lt;p&gt;So yeah, I was super sick and miserable and was supposed to hold a discussion the next day. I emailed my professor and he said we could find a sub. Fast forward to Friday and no one showed up to hold the discussion. I got a slight reprimand from the professor as apparently it was my responsibility to find a substitute, which I was unaware of. For those keeping score at home it’s now something like 0-1000 against Stefan for this week. Let’s hope there’s some improvement for next week but I won’t hold my breath.&lt;/p&gt;
+
+&lt;h3 id=&quot;tldr-this-is-an-abbreviation-for-too-long-dontdidnt-read-i-will-include-them-in-any-lengthy-posts&quot;&gt;TL;DR: (This is an abbreviation for Too Long Don’t/Didn’t Read I will include them in any lengthy posts)&lt;/h3&gt;
+&lt;p&gt;Got super sick on my birthday. Had no Valentine :(. Missed my discussion because I was sick and really screwed up the week. &lt;strong&gt;Great Week!&lt;/strong&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 15 Feb 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-02-15/A-Here-goes-nothing.html</link>
+          
+        
+            <category>firstpost</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+    <item>
+        <title>I almost forgot</title>
+        <description>&lt;h1 id=&quot;so-what-am-i-doing&quot;&gt;So, what am I doing?&lt;/h1&gt;
+&lt;p&gt;I’m making a website using a nifty little too called Jekyll that turns .md blog posts into static html which is really quite convenient. I’m doing this as a fun little side project, a way to flex my very atrophied coding muscles and, a way to tell friends and family what is going on in my life.&lt;/p&gt;
+&lt;h2 id=&quot;how-often-will-i-post&quot;&gt;How often will I post?&lt;/h2&gt;
+&lt;p&gt;No idea depends if I get bored or busy or idk die tragically, I can’t predict the future.&lt;/p&gt;
+&lt;h2 id=&quot;what-are-my-goals-here&quot;&gt;What are my goals here?&lt;/h2&gt;
+&lt;p&gt;I want to at least make this site reasonably nice to look at and not exceptionally boring. I’d like to share my interests when it comes to cinema and music and whatever other stuff I can think of.&lt;/p&gt;
+&lt;h2 id=&quot;in-conclusion&quot;&gt;In Conclusion&lt;/h2&gt;
+&lt;p&gt;Oh, Jeez Rick, it’s going to be an interesting journey as Stefan tries to understand the internet. Let’s hope for the best.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 15 Feb 2020 00:00:00 -0500</pubDate>
+        
+        <link>/posts/2020-02-15/2-B-almost-forgot.html</link>
+          
+        
+            <category>firstpost</category>
+        
+          
+        
+            <category>posts</category>
+        
+          
+      </item>
+    
+  </channel>
+</rss>
