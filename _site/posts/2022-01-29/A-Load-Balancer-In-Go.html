@@ -1,0 +1,426 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+<title>Let's build a load balancer in Go &#8211; Stefan T. Heller</title>
+<meta name="description" content="A site about my daily activities, musings, and experiences">
+<meta name="keywords" content="Golang">
+
+<!-- MathJax -->
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Let's build a load balancer in Go">
+<meta property="og:description" content="A site about my daily activities, musings, and experiences">
+<meta property="og:url" content="/posts/2022-01-29/A-Load-Balancer-In-Go.html">
+<meta property="og:site_name" content="Stefan T. Heller">
+
+
+
+
+
+<link rel="canonical" href="/posts/2022-01-29/A-Load-Balancer-In-Go.html">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Stefan T. Heller Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+    <!-- HEADER IMAGE -->
+    <!-- <center>
+        <span class="main-header-image">
+            <a href="/"><img src="/images/header/clean-and-simple-header.jpg"></a>
+        </span>
+    </center> -->
+    <br>
+    <center>
+        <span class="main-header-image">
+            <h1 style="font-weight:100; font-kerning:normal"><a href="/">Stefan T. Heller</a></h1>
+        </span>
+    </center>
+
+    <!-- NAVIGATION -->
+    <br>
+    <center>
+    <nav class="header-nav">
+        <ul class="navigation-bar">
+            <li><a href="/">HOME</a></li>
+            <li><a href="/blog/">BLOG</a></li>
+            <li><a href="/about/">ABOUT</a></li>
+            <li><a href="/resume/">RESUME</a></li>
+        </ul>
+    </nav>
+</center>
+
+</head>
+
+<!-- BODY -->
+<body id="post-index">
+    <!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+
+    <div id="main" role="main">
+        <article class="hentry">
+
+            <div class="featured-image">
+            <img src="" style="width:100%">
+            </div>
+
+            <!-- MAIN -->
+            <h1 class="entry-title">
+                <a>Let's build a load balancer in Go</a>
+            </h1>
+            <h3 class="entry-subtitle">
+                <a href="" rel="bookmark" title="" itemprop="url"></a>
+            </h3>
+
+            <hr>
+
+            <!-- POST CONTENT -->
+            <div class="entry-content">
+                <h1 id="building-a-backend-load-balancer-in-go">Building a backend load balancer in Go</h1>
+
+<h2 id="a-brief-introduction-and-motivation-for-this-project">A brief introduction and motivation for this project:</h2>
+<p>As you can see on a few of the posts on this blog, I am a Computer Science student interested in backend programming and learning new technologies.
+I recently accepted an internship at Okta, where I am told I will being mainly doing development in Go. My interviewer was convinced that if I can learn Ocaml (something I think I’ll probably make a post about sometime soon), then Go should be no problem. Well I guess I gotta learn the language…</p>
+
+<p>I decided to work build a few personal projects in Go in order to hone my skills and learn more about the language. Overall it has been a really positive experience. Turns out Go is everything I was in a language. I don’t remember if I have written anything about this, but I really liked my time writing C at school. It felt like the coolest language I had encountered, with low level control and pretty significant efficiency. Obviously though, C is a bit of a tough pill to swallow. It is becoming less popular in industry and the headaches you encounter when it comes to memory management, along with how easy it is to brick a program or write something that is extremely easy to exploit, make C a bit of a losing pick in 2022. <em>Enter Go…</em> The best way I can describe Go is a middle ground between C and python, with an extremely fast compile time. Turns out the language was made as a modern succesor to C, geared around fast compile times, readability, safety, and concurrency.</p>
+
+<p>Go is a statically typed (as all things should be), compiled (also as all things should be), garbage collected (as all things except Rust should be) language. It uses a sort of modernized C type syntax and gives you memory safe and impressively efficient control of low level functions. Anyway, I decided I would build a load balancer as it sounded like a cool example of distributed systems building in Go.</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+   <span class="c1">// A simple hello world program in C</span>
+   <span class="n">printf</span><span class="p">(</span><span class="s">"Hello, World!"</span><span class="p">);</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+<span class="k">import</span><span class="p">(</span>
+  <span class="s">"fmt"</span>
+<span class="p">)</span>
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+   <span class="c">// The equivalent program in Go</span>
+   <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"Hello, World!"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="load-balancer">Load Balancer</h3>
+<p>So here’s the basic idea. A typical web server is one machine which takes requests from the user and sends back responses which are interpreted by the browser and displayed to the user. This is pretty straight forward, but we could spend a lot of time talking about the minutia. But a more interesting question is what happens when there are multiple servers which can provide the same service, and lots of users? When this happens we need to distribute the load across multiple proxies and provide the same response the user would expect. So let’s do that.</p>
+
+<h2 id="building-out-structs">Building out Structs</h2>
+<p>Let’s build out some structs to represent our servers and hold the important information about our servers. We’ll start with a <code class="language-plaintext highlighter-rouge">Server</code> struct:</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Server struct with a url, status, mutex, and reverse proxy to handle requests</span>
+<span class="k">type</span> <span class="n">Server</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">URL</span>          <span class="o">*</span><span class="n">url</span><span class="o">.</span><span class="n">URL</span>
+	<span class="n">Alive</span>        <span class="kt">bool</span>
+	<span class="n">mux</span>          <span class="n">sync</span><span class="o">.</span><span class="n">RWMutex</span>
+	<span class="n">ReverseProxy</span> <span class="o">*</span><span class="n">httputil</span><span class="o">.</span><span class="n">ReverseProxy</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>We have a Url to represent our proxies url, a boolean for the status of the server, a mutext to allow concurrent reading and writing, and a reverse proxy, which I will explain later. Now let’s build a <code class="language-plaintext highlighter-rouge">Servers</code> struct to hold all of our servers.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Server set to maintain list of servers</span>
+<span class="k">type</span> <span class="n">Servers</span> <span class="k">struct</span> <span class="p">{</span>
+	<span class="n">backends</span>  <span class="p">[]</span><span class="o">*</span><span class="n">Server</span>
+	<span class="n">currentId</span> <span class="kt">uint64</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This one is pretty self explanatory. An array of <code class="language-plaintext highlighter-rouge">Server</code> pointers and an int to count the connection number.</p>
+
+<p>Next let’s create a list of our server urls, these can be any url you want, and we could easily change the logic to read from input or a file or something, but for our usecase it’s hard coded.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Predefined list of servers, this can easily be read from a file if wanted</span>
+<span class="k">var</span> <span class="n">ServerList</span> <span class="o">=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span>
+	<span class="s">"http://localhost:5000"</span><span class="p">,</span>
+	<span class="s">"http://localhost:5002"</span><span class="p">,</span>
+	<span class="s">"http://localhost:5003"</span><span class="p">,</span>
+	<span class="s">"http://localhost:5004"</span><span class="p">,</span>
+	<span class="s">"http://localhost:5005"</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="on-to-the-functions">On to the functions</h2>
+<p>Ok, now we can start to write some functions. We can start by creating a function to add servers to our server list, which we need to declare as well.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">serverPool</span> <span class="n">Servers</span>
+
+<span class="c">// Append servers to the server list</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="o">*</span><span class="n">Servers</span><span class="p">)</span> <span class="n">AddServer</span><span class="p">(</span><span class="n">backend</span> <span class="o">*</span><span class="n">Backend</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">s</span><span class="o">.</span><span class="n">backends</span> <span class="o">=</span> <span class="nb">append</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backends</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This is just a function to append servers to our pool. If you don’t understand what it’s doing you should look into Array slices in Go. Moving on… We can now write a function to mark an individual server as alive or dead. The syntax here might be a little confusing, but basically we are extending to <code class="language-plaintext highlighter-rouge">Servers</code> type to have a new function which can be called on any <code class="language-plaintext highlighter-rouge">Servers</code> instance.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Mark the status of a specified server as either alive or dead</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="o">*</span><span class="n">Servers</span><span class="p">)</span> <span class="n">MarkStatus</span><span class="p">(</span><span class="n">url</span> <span class="o">*</span><span class="n">url</span><span class="o">.</span><span class="n">URL</span><span class="p">,</span> <span class="n">alive</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">back</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span><span class="o">.</span><span class="n">backends</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="n">back</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">String</span><span class="p">()</span> <span class="o">==</span> <span class="n">url</span><span class="o">.</span><span class="n">String</span><span class="p">()</span> <span class="p">{</span>
+			<span class="n">back</span><span class="o">.</span><span class="n">Alive</span> <span class="o">=</span> <span class="n">alive</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>We are taking in a url and boolean status, then we look for that specific server in our pool and mark it accordingly.</p>
+
+<h2 id="setting-and-checking">Setting and Checking</h2>
+
+<p>We need to be able to interact with our servers, and if they are alive we need to know that, if that status changes we need to reflect that somewhere. So we’re going to write some functions to accomplish this.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Set server as alive</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span><span class="n">Server</span><span class="p">)</span> <span class="n">SetAlive</span><span class="p">(</span><span class="n">alive</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">b</span><span class="o">.</span><span class="n">mux</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+	<span class="n">b</span><span class="o">.</span><span class="n">Alive</span> <span class="o">=</span> <span class="n">alive</span>
+	<span class="n">b</span><span class="o">.</span><span class="n">mux</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c">// Check if server is alive</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">b</span> <span class="o">*</span><span class="n">Server</span><span class="p">)</span> <span class="n">IsAlive</span><span class="p">()</span> <span class="p">(</span><span class="n">alive</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">b</span><span class="o">.</span><span class="n">mux</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+	<span class="n">alive</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">Alive</span>
+	<span class="n">b</span><span class="o">.</span><span class="n">mux</span><span class="o">.</span><span class="n">RUnlock</span><span class="p">()</span>
+	<span class="k">return</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is where our mutex from before comes in. We use a mutext to synchronize our access of the server status, we don’t want one routine setting the status of the server at the same time as another routine, and stuff like that. So we lock our mutex, read or write, and then unlock. Pretty straight forward. Look more into concurrency if this is confusing.</p>
+
+<p>Now that we can set and read, we need a way to actually determine if a server is alive or not. This is were we need to make some connections to test out the status. We will write a function to test our server’s connection.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Check if server is alive</span>
+<span class="k">func</span> <span class="n">isServerAlive</span><span class="p">(</span><span class="n">url</span> <span class="o">*</span><span class="n">url</span><span class="o">.</span><span class="n">URL</span><span class="p">)</span> <span class="p">(</span><span class="n">alive</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">alive</span> <span class="o">=</span> <span class="no">false</span>
+	<span class="n">connection</span><span class="p">,</span> <span class="n">err</span> <span class="o">:=</span> <span class="n">net</span><span class="o">.</span><span class="n">DialTimeout</span><span class="p">(</span><span class="s">"tcp"</span><span class="p">,</span> <span class="n">url</span><span class="o">.</span><span class="n">String</span><span class="p">()[</span><span class="m">7</span><span class="o">:</span><span class="p">],</span> <span class="m">2</span><span class="o">*</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">err</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">log</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="n">alive</span> <span class="o">=</span> <span class="no">true</span>
+	<span class="n">_</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+	<span class="k">return</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This function takes a url, send a request to that url. If the request times out then it returns false for alive, if it connects then it returns true. Note the use of Go’s interesting named return syntax. I just threw it in here because I had never used it, might not be the best for readability to be honest.</p>
+
+<h2 id="health-check">Health Check</h2>
+<p>So now we can check the status of an individual server and set it as well, but when do we check… How often, how do we initialize this? The answer once again relies on goroutines. We will create a new one to check the status of each server and report back. We will set a timer for every 20 seconds and once the timer finishes it will run again. This way we can constantly know the status of each of our servers.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Check the status of each server and log</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="o">*</span><span class="n">Servers</span><span class="p">)</span> <span class="n">HealthCheck</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">back</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">s</span><span class="o">.</span><span class="n">backends</span> <span class="p">{</span>
+		<span class="n">alive</span> <span class="o">:=</span> <span class="n">isServerAlive</span><span class="p">(</span><span class="n">back</span><span class="o">.</span><span class="n">URL</span><span class="p">)</span>
+		<span class="n">back</span><span class="o">.</span><span class="n">Alive</span> <span class="o">=</span> <span class="n">alive</span>
+		<span class="k">var</span> <span class="n">status</span> <span class="kt">string</span>
+		<span class="k">if</span> <span class="n">alive</span> <span class="p">{</span>
+			<span class="n">status</span> <span class="o">=</span> <span class="s">"ok"</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="n">status</span> <span class="o">=</span> <span class="s">"down"</span>
+		<span class="p">}</span>
+		<span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"%s [status: %s]</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">back</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">String</span><span class="p">(),</span> <span class="n">status</span><span class="p">)</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">// Periodically run a health check</span>
+<span class="k">func</span> <span class="n">healthCheck</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">timer</span> <span class="o">:=</span> <span class="n">time</span><span class="o">.</span><span class="n">NewTimer</span><span class="p">(</span><span class="m">20</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="n">timer</span><span class="o">.</span><span class="n">C</span><span class="o">:</span>
+			<span class="n">log</span><span class="o">.</span><span class="n">Print</span><span class="p">(</span><span class="s">"Starting health check...</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+			<span class="n">serverPool</span><span class="o">.</span><span class="n">HealthCheck</span><span class="p">()</span>
+			<span class="n">log</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"End Health Check...</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The for loop in <code class="language-plaintext highlighter-rouge">healthCheck</code> will run until the program is terminated, and the select will run our <code class="language-plaintext highlighter-rouge">serverPool.HealthCheck()</code> everytime the timer finishes. The logic in <code class="language-plaintext highlighter-rouge">HealthCheck</code> is pretty straight forward, we check the status and report back for each server, then we’er done. Within our main function we start our this loop by running <code class="language-plaintext highlighter-rouge">go healthCheck()</code>.</p>
+
+<h2 id="actually-balancing-the-load">Actually balancing the load</h2>
+<p>So it’s all well and good, but we’re not actually distributing the load at all. We need a way to cycle through servers and use them according to some sort of criteria. For the sake of simplicity we will just use a round robin cycle. We always just choose the next alive server to handle our connection. Let’s write a function to determine which server is next in line.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Return the index of next server</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="o">*</span><span class="n">Servers</span><span class="p">)</span> <span class="n">NextIndex</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="kt">int</span><span class="p">(</span><span class="n">atomic</span><span class="o">.</span><span class="n">AddUint64</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">.</span><span class="n">currentId</span><span class="p">,</span> <span class="kt">uint64</span><span class="p">(</span><span class="m">1</span><span class="p">))</span> <span class="o">%</span> <span class="kt">uint64</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backends</span><span class="p">)))</span>
+<span class="p">}</span>
+
+<span class="c">// Starting at next server look for next alive server. This distributes the load in a round robin manner</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">s</span> <span class="o">*</span><span class="n">Servers</span><span class="p">)</span> <span class="n">NextAlive</span><span class="p">()</span> <span class="o">*</span><span class="n">Server</span> <span class="p">{</span>
+	<span class="n">nextInd</span> <span class="o">:=</span> <span class="n">s</span><span class="o">.</span><span class="n">NextIndex</span><span class="p">()</span>
+
+	<span class="n">loc</span> <span class="o">:=</span> <span class="n">nextInd</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backends</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="n">nextInd</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">loc</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="n">ind</span> <span class="o">:=</span> <span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">backends</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">backends</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span><span class="o">.</span><span class="n">Alive</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">nextInd</span> <span class="p">{</span>
+				<span class="n">atomic</span><span class="o">.</span><span class="n">StoreUint64</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="o">.</span><span class="n">currentId</span><span class="p">,</span> <span class="kt">uint64</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span>
+			<span class="p">}</span>
+			<span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">backends</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In our <code class="language-plaintext highlighter-rouge">serverPool</code> we are storing an index which counts our connections. We can use that to determine what the next server to use is. We start at the next index and look for the next alive server. We then return a pointer to it so we know which server to connect to. We need to actually use the server though, so here is where the <code class="language-plaintext highlighter-rouge">loadBalancer</code> comes in.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Serve the response through the next alive server</span>
+<span class="k">func</span> <span class="n">loadBalancer</span><span class="p">(</span><span class="n">w</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">alive</span> <span class="o">:=</span> <span class="n">serverPool</span><span class="o">.</span><span class="n">NextAlive</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">alive</span> <span class="o">!=</span> <span class="no">nil</span> <span class="p">{</span>
+		<span class="n">alive</span><span class="o">.</span><span class="n">ReverseProxy</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="n">http</span><span class="o">.</span><span class="n">Error</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="s">"Service Not Available"</span><span class="p">,</span> <span class="n">http</span><span class="o">.</span><span class="n">StatusServiceUnavailable</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We take the response sent to our input server and redirect it (server it via a reverse proxy) to the next alive server in our pool. If something doesn’t work then we give the user an HTTP error stating that the service is not available.</p>
+
+<h2 id="puting-it-all-together">Puting it all together</h2>
+<p>We need a main function to put everything together, handle our requests, and actually delegate the work. first we will store our end point url so we can refer to it later</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">uri</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">url</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">"http://127.0.0.1:8080"</span><span class="p">)</span>
+	<span class="n">port</span> <span class="o">:=</span> <span class="m">8080</span>
+</code></pre></div></div>
+<p>We can then create a server object which will initiate all of the action on our network.</p>
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Initialize server</span>
+<span class="n">server</span> <span class="o">:=</span> <span class="n">http</span><span class="o">.</span><span class="n">Server</span><span class="p">{</span>
+  <span class="n">ConnState</span><span class="o">:</span> <span class="n">cw</span><span class="o">.</span><span class="n">OnStateChange</span><span class="p">,</span>
+  <span class="c">// Add loadBalancer as function to direct requests</span>
+  <span class="n">Handler</span><span class="o">:</span> <span class="n">http</span><span class="o">.</span><span class="n">HandlerFunc</span><span class="p">(</span><span class="n">loadBalancer</span><span class="p">),</span>
+  <span class="n">Addr</span><span class="o">:</span>    <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">":%d"</span><span class="p">,</span> <span class="n">port</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now comes the interesting part. We need to loop through our <code class="language-plaintext highlighter-rouge">ServerList</code> from before and create a <code class="language-plaintext highlighter-rouge">Server</code> for each one. We will then attempt to connect to each one and set its’s status. There is some variability with servers, so we will attempt to connect 3 times before we give up. In order to do this we will store our attempts count and retries count within the context of our HTTP request. We have to actually have a way to read and write to our context, so we will write a couple functions for this. We will also create a couple const iota ints to hold our attemps and retries.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Atomically incrementing ints to count connection attemps and retries</span>
+<span class="k">const</span> <span class="n">Attempts</span> <span class="kt">int</span> <span class="o">=</span> <span class="no">iota</span>
+<span class="k">const</span> <span class="n">Retry</span> <span class="kt">int</span> <span class="o">=</span> <span class="no">iota</span>
+
+<span class="c">// Read retries from contett</span>
+<span class="k">func</span> <span class="n">GetRetryFromContext</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="n">retry</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">Retry</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">retry</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="m">0</span>
+<span class="p">}</span>
+
+<span class="c">// Read attempst from context</span>
+<span class="k">func</span> <span class="n">GetAttemptsFromContext</span><span class="p">(</span><span class="n">r</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="n">attempts</span><span class="p">,</span> <span class="n">ok</span> <span class="o">:=</span> <span class="n">r</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">Attempts</span><span class="p">)</span><span class="o">.</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span> <span class="n">ok</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">attempts</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="m">0</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now we can put it all together and actually get our servers going and added to our pool.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// loop through list of servers and attempt to connect to each</span>
+	<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">str</span> <span class="o">:=</span> <span class="k">range</span> <span class="n">ServerList</span> <span class="p">{</span>
+		<span class="n">url</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">url</span><span class="o">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">str</span><span class="p">)</span>
+		<span class="c">// proxy is where the request will be redirected to</span>
+		<span class="n">proxy</span> <span class="o">:=</span> <span class="n">httputil</span><span class="o">.</span><span class="n">NewSingleHostReverseProxy</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+		<span class="c">// Add an error handler to the proxy for when the connection refuses</span>
+		<span class="n">proxy</span><span class="o">.</span><span class="n">ErrorHandler</span> <span class="o">=</span> <span class="k">func</span><span class="p">(</span><span class="n">writer</span> <span class="n">http</span><span class="o">.</span><span class="n">ResponseWriter</span><span class="p">,</span> <span class="n">request</span> <span class="o">*</span><span class="n">http</span><span class="o">.</span><span class="n">Request</span><span class="p">,</span> <span class="n">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">retries</span> <span class="o">:=</span> <span class="n">GetRetryFromContext</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+			<span class="c">// Attempt to connect to backend 3 times, if not successful, mark it as down</span>
+			<span class="k">if</span> <span class="n">retries</span> <span class="o">&lt;</span> <span class="m">3</span> <span class="p">{</span>
+				<span class="k">select</span> <span class="p">{</span>
+				<span class="k">case</span> <span class="o">&lt;-</span><span class="n">time</span><span class="o">.</span><span class="n">After</span><span class="p">(</span><span class="m">10</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span><span class="p">)</span><span class="o">:</span>
+					<span class="c">// store attempts/retries within context in the request object</span>
+					<span class="n">cont</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">Context</span><span class="p">(),</span> <span class="n">Retry</span><span class="p">,</span> <span class="n">retries</span><span class="o">+</span><span class="m">1</span><span class="p">)</span>
+					<span class="n">proxy</span><span class="o">.</span><span class="n">ServeHTTP</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">WithContext</span><span class="p">(</span><span class="n">cont</span><span class="p">))</span>
+				<span class="p">}</span>
+				<span class="k">return</span>
+			<span class="p">}</span>
+			<span class="c">// mark backend as dead</span>
+			<span class="n">serverPool</span><span class="o">.</span><span class="n">MarkStatus</span><span class="p">(</span><span class="n">uri</span><span class="p">,</span> <span class="no">false</span><span class="p">)</span>
+			<span class="c">// read attempts from context of request</span>
+			<span class="n">attempts</span> <span class="o">:=</span> <span class="n">GetAttemptsFromContext</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+			<span class="n">cont</span> <span class="o">:=</span> <span class="n">context</span><span class="o">.</span><span class="n">WithValue</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">Context</span><span class="p">(),</span> <span class="n">Retry</span><span class="p">,</span> <span class="n">retries</span><span class="o">+</span><span class="m">1</span><span class="p">)</span>
+			<span class="n">loadBalancer</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">WithContext</span><span class="p">(</span><span class="n">cont</span><span class="p">))</span>
+		<span class="p">}</span>
+		<span class="n">serverPool</span><span class="o">.</span><span class="n">AddServer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Server</span><span class="p">{</span>
+			<span class="n">URL</span><span class="o">:</span>          <span class="n">url</span><span class="p">,</span>
+			<span class="n">Alive</span><span class="o">:</span>        <span class="no">true</span><span class="p">,</span>
+			<span class="n">ReverseProxy</span><span class="o">:</span> <span class="n">proxy</span><span class="p">,</span>
+		<span class="p">})</span>
+</code></pre></div></div>
+
+<p>We wrap it all up with a simple <code class="language-plaintext highlighter-rouge">server.ListenAndServer()</code> and there we go. Our server is being load balanced… well it’s not actually, because we don’t have any proxy servers going. I won’t go through it here, but it is very easy to write a small server with Flask to just print our it’s name on a webpage so we know which proxy is handling our request. We can just create some instances of these servers and watch it all work. I’ll just throw in the code for a server to make it easier:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">server_name</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="o">@</span><span class="n">app</span><span class="p">.</span><span class="n">route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">server_name</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+   <span class="n">app</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre></div></div>
+<p>And there you have it. A functional load balancer written in Go. You can view all the code put together (with a couple additions) <a href="https://github.com/stefanhts/seasaw">here</a>. I hope this was fun and helpful and all that.</p>
+
+<p>See you in the next one!</p>
+
+            </div>
+
+            <!--- DIVIDING LINE -->
+            <hr>
+
+            <!-- POST TAGS -->
+            <div class="inline-tags">
+                <span>
+                    
+                        <a href="/tags/#Golang">#Golang&nbsp;&nbsp;&nbsp;</a>
+                    
+                </span>
+            </div>
+
+            <br>
+
+            <!-- POST DATE -->
+            <div class="post-date">
+                January 29 2022
+            </div>
+        </article>
+    </div>
+</body>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-wrapper">
+        <footer role="contentinfo">
+            <span>
+    &copy; 2022 Stefan T. Heller.
+</span>
+
+        </footer>
+    </div>
+</footer>
+</html>

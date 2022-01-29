@@ -1,28 +1,24 @@
----
-layout: post
-title: About
----
+I"�	<p>My name is <i>Stefan T. Heller</i> and I like to code.
+<br />
+I am a Computer Science and Physics double major at the University of Maryland, College Park</p>
 
-My name is <i>Stefan T. Heller</i> and I like to code.
-<br/>
-I am a Computer Science and Physics double major at the University of Maryland, College Park
-
-This website serves as a blog, a learning experience, and (at some point soon) a portfolio...
-<hr/>
+<p>This website serves as a blog, a learning experience, and (at some point soon) a portfolio…</p>
+<hr />
 
 <h3> Where am I now?</h3>
 
-At the time of writing this I am 21 and still working on my 2 degress at the
+<p>At the time of writing this I am 21 and still working on my 2 degress at the
 <a href="https://umd.edu" style="color:red">University of Marlyand, College Park</a>.
 I am currently taking classes in Compilers (Using Racket and x86 assembly), Artificial Intelligence, and Data Visualization.
-To read more about what's going on with me, head over to my <a href="/blog/">blog</a>.
+To read more about what’s going on with me, head over to my <a href="/blog/">blog</a>.</p>
 
 <h3> What are my interests?</h3>
-<hr>
+<hr />
+
 <h4><code>Computer Science:</code></h4>
 
-When it comes to Computer Science, I am mainly interested in backend development as well as more applied theory type projects, such as Regex Engines, building programming languages, and Block Chain construction and application. I recently accepted an internship at Okta, where supposedly I will be doing development in Go. So over the past couple weeks I have been honing my Go skills with the intent of making it my #1 language by the time summer roles around. 
-<br>
+<p>When it comes to Computer Science, I am mainly interested in backend development as well as more applied theory type projects, such as Regex Engines, building programming languages, and Block Chain construction and application. I recently accepted an internship at Okta, where supposedly I will be doing development in Go. So over the past couple weeks I have been honing my Go skills with the intent of making it my #1 language by the time summer roles around. 
+<br /></p>
 
 <h4>Everything Else:</h4>
 
@@ -34,6 +30,7 @@ In addition to Yoga I have been getting into hiking lately, just generally tryin
 </p>
 
 <h3> So that's me</h3>
-Summed up, I like computers, numbers, music, movies, video games, and different sorts of exercise. And yeah that's all there is to me.
+<p>Summed up, I like computers, numbers, music, movies, video games, and different sorts of exercise. And yeah that’s all there is to me.</p>
 
-I look forward to seeing you here more often :)
+<p>I look forward to seeing you here more often :)</p>
+:ET

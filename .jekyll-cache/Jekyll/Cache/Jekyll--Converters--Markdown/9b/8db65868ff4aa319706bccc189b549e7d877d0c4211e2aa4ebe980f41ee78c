@@ -1,4 +1,4 @@
-I"þ&<h1 id="day-3-problem-3">Day 3 Problem 3</h1>
+I"ç&<h1 id="day-3-problem-3">Day 3 Problem 3</h1>
 <p>Todayâ€™s problem takes a turn away from the past 2. Now, instead of having a problem involving array manipulation, we need to deserialize
 and serialize methods for a binary tree. Hereâ€™s the problem they give us:</p>
 <blockquote>
@@ -8,13 +8,13 @@ For example, given the following Node class</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
 </code></pre></div></div>
 <p>The following test should pass:</p>
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s">'root'</span><span class="p">,</span> <span class="n">Node</span><span class="p">(</span><span class="s">'left'</span><span class="p">,</span> <span class="n">Node</span><span class="p">(</span><span class="s">'left.left'</span><span class="p">)),</span> <span class="n">Node</span><span class="p">(</span><span class="s">'right'</span><span class="p">))</span>
-<span class="k">assert</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="n">node</span><span class="p">))</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="s">'left.left'</span>
+<span class="k">assert</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="n">node</span><span class="p">)).</span><span class="n">left</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">val</span> <span class="o">==</span> <span class="s">'left.left'</span>
 </code></pre></div></div>
 
 <p>As I mentioned before, the goal of what I am doing with these problems is to sharpen my JavaScript skills, so while I could answer this problem in
