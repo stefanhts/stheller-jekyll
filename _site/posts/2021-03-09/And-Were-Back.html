@@ -103,7 +103,7 @@
             <div class="entry-content">
                 <h1 id="so-yeah-i-was-gone-but-now-im-back">So yeah, I was gone, but now I’m back</h1>
 <p>I have been pretty busy with video games and school and external projects, but I think I’m back now. I plan on
-making some pretty significan changes to this site in the near future, so stay tuned… :)</p>
+making some pretty significant changes to this site in the near future, so stay tuned… :)</p>
 
 <h2 id="a-new-series">A new series</h2>
 <p>I recently subscribed to a service <a href="https://www.dailycodingproblem.com">linked here</a> which sends me a coding problem everyday. I’ve decided to blog about them here.
@@ -142,6 +142,7 @@ lookup times.</p>
 <code class="language-plaintext highlighter-rouge">const arr = [10, 15, 3, 7]</code>
 Next I’ll define my results function using a fancy JavaScript arrow function</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="c1">//define array</span>
+<span class="kd">const</span> <span class="nx">k</span> <span class="o">=</span> <span class="mi">17</span> <span class="c1">// define constant</span>
 
 <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">,</span> <span class="nx">k</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">lookup</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Set</span><span class="p">()</span> <span class="c1">// define a set</span>
@@ -153,7 +154,7 @@ Next I’ll define my results function using a fancy JavaScript arrow function</
     <span class="k">return</span> <span class="kc">false</span>
 <span class="p">}</span>
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">(</span><span class="nx">arr</span><span class="p">))</span> <span class="c1">// output results</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">results</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span> <span class="nx">k</span><span class="p">))</span> <span class="c1">// output results</span>
 </code></pre></div></div>
 <p>What I’ve done here is iterate through the array and check to see if the value in the list is in our set, if it is we return true.
 But why does this work? It works because we are not adding the number to the set, instead we are adding (k-num) which means that when

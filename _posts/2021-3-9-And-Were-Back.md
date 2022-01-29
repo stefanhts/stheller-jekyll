@@ -7,7 +7,7 @@ date-string: March 9 2021
 ---
 # So yeah, I was gone, but now I'm back
 I have been pretty busy with video games and school and external projects, but I think I'm back now. I plan on
-making some pretty significan changes to this site in the near future, so stay tuned... :)
+making some pretty significant changes to this site in the near future, so stay tuned... :)
 
 ## A new series
 I recently subscribed to a service [linked here](https://www.dailycodingproblem.com) which sends me a coding problem everyday. I've decided to blog about them here.
@@ -43,6 +43,7 @@ First I'll just define my array
 Next I'll define my results function using a fancy JavaScript arrow function
 ``` javascript
 const arr = [10, 15, 3, 7] //define array
+const k = 17 // define constant
 
 const results = (lst, k) => {
     let lookup = new Set() // define a set
@@ -54,7 +55,7 @@ const results = (lst, k) => {
     return false
 }
 
-console.log(results(arr)) // output results
+console.log(results(arr, k)) // output results
 ```
 What I've done here is iterate through the array and check to see if the value in the list is in our set, if it is we return true.
 But why does this work? It works because we are not adding the number to the set, instead we are adding (k-num) which means that when

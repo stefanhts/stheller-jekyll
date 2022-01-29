@@ -1,0 +1,272 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+<title>Problem 2 Electric Boogaloo &#8211; Stefan T. Heller</title>
+<meta name="description" content="A site about my daily activities, musings, and experiences">
+<meta name="keywords" content="thesequelnoonesawcoming">
+
+<!-- MathJax -->
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Problem 2 Electric Boogaloo">
+<meta property="og:description" content="A site about my daily activities, musings, and experiences">
+<meta property="og:url" content="/posts/2021-03-10/problem-2-electric-boogaloo.html">
+<meta property="og:site_name" content="Stefan T. Heller">
+
+
+
+
+
+<link rel="canonical" href="/posts/2021-03-10/problem-2-electric-boogaloo.html">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Stefan T. Heller Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+    <!-- HEADER IMAGE -->
+    <!-- <center>
+        <span class="main-header-image">
+            <a href="/"><img src="/images/header/clean-and-simple-header.jpg"></a>
+        </span>
+    </center> -->
+    <br>
+    <center>
+        <span class="main-header-image">
+            <h1 style="font-weight:100; font-kerning:normal"><a href="/">Stefan T. Heller</a></h1>
+        </span>
+    </center>
+
+    <!-- NAVIGATION -->
+    <br>
+    <center>
+    <nav class="header-nav">
+        <ul class="navigation-bar">
+            <li><a href="/">HOME</a></li>
+            <li><a href="/blog/">BLOG</a></li>
+            <li><a href="/about/">ABOUT</a></li>
+            <li><a href="/resume/">RESUME</a></li>
+        </ul>
+    </nav>
+</center>
+
+</head>
+
+<!-- BODY -->
+<body id="post-index">
+    <!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+
+    <div id="main" role="main">
+        <article class="hentry">
+
+            <div class="featured-image">
+            <img src="" style="width:100%">
+            </div>
+
+            <!-- MAIN -->
+            <h1 class="entry-title">
+                <a>Problem 2 Electric Boogaloo</a>
+            </h1>
+            <h3 class="entry-subtitle">
+                <a href="" rel="bookmark" title="" itemprop="url"></a>
+            </h3>
+
+            <hr>
+
+            <!-- POST CONTENT -->
+            <div class="entry-content">
+                <h1 id="as-promised-i-have-returned-with-the-second-coding-problem">As promised, I have returned with the second coding problem</h1>
+<p>Not much has changed for me in the last day. I’ve attempted a couple Minecraft speedruns, and suffered from some pretty significant allergies.
+Life is a pleasure as always.</p>
+
+<h2 id="anyways-on-to-the-problem">Anyways, on to the problem</h2>
+
+<h2 id="problem-2">Problem 2:</h2>
+<blockquote>
+  <p>Good morning! Here’s your coding interview problem for today.
+This problem was asked by Uber.
+Given an array of integers, return a new array such that each element at index i of the new array is the product of all the numbers in the original array except the one at i.
+For example, if our input was [1, 2, 3, 4, 5], the expected output would be [120, 60, 40, 30, 24]. If our input was [3, 2, 1], the expected output would be [2, 3, 6].
+<br />
+Follow-up: what if you can’t use division?</p>
+</blockquote>
+
+<h2 id="my-solution">My solution:</h2>
+<p>Again we find ourselves with a fairly simple problem, although today’s was tagged as [Hard] hm…
+Anyway, we are being given an array and need to return an array which at each element contains the product of each of the
+elements from the input array excluding the item at the current index. Once again we want to split the problem into 3 pieces.</p>
+
+<h3 id="input">Input:</h3>
+<p>An array of integers we’ll call <code class="language-plaintext highlighter-rouge">arr</code></p>
+
+<h3 id="goal">Goal:</h3>
+<p>Return an array with the product of the entire input array, excluding the element at the current index.</p>
+
+<h3 id="constraints">Constraints:</h3>
+<p>Can we do this without division?</p>
+
+<h3 id="time-to-write-some-code">Time to write some code</h3>
+<p>Anytime I see a challenge constraint I immediately try to solve the problem including that approach first, but for the sake of explanation I will start with
+the easier version first. The first thing that comes to mind is to iterate through the list and then use nested iteration at each element to get the product. There
+are a couple key issues with the approach. The first is that this over complicates the problem, we need to use our heads here and not just charge at the problem with
+for-loops brandished. The second issue is that this algorithm would then have a time complexity of <strong>O(n^2)</strong> which, in my book, is much to large for this problem.</p>
+
+<h4 id="lets-start-with-approaching-this-from-a-math-perspective">Let’s start with approaching this from a math perspective</h4>
+<p>What is the easiest way to get the product excluding a particular element? If we really want to simplify our work we can just multiply each of the elements and then
+everytime we want to get the value we simply divide the product by the element in question. The implementation should look something like this:
+<br />
+First I’ll just define my array
+<code class="language-plaintext highlighter-rouge">const arr = [3, 2, 1]</code>
+Next I’ll define my product and division functions with arrow functions</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// vvvvv Division vvvvv</span>
+<span class="kd">const</span> <span class="nx">product</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// define product function</span>
+  <span class="kd">let</span> <span class="nx">prod</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">// our product variable</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">num</span> <span class="k">of</span> <span class="nx">lst</span><span class="p">)</span> <span class="c1">// loop through values in the array</span>
+    <span class="nx">prod</span> <span class="o">*=</span> <span class="nx">num</span> <span class="c1">// scale product</span>
+  <span class="k">return</span> <span class="nx">prod</span> <span class="c1">//return the product</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">division</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">// define the division function</span>
+  <span class="kd">let</span> <span class="nx">output</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">//define an output array</span>
+  <span class="kd">const</span> <span class="nx">prod</span> <span class="o">=</span> <span class="nx">product</span><span class="p">(</span><span class="nx">lst</span><span class="p">)</span> <span class="c1">// get the total product by calling our previous function</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">num</span> <span class="k">of</span> <span class="nx">lst</span><span class="p">)</span> <span class="c1">// increment through values in the array</span>
+    <span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">prod</span> <span class="o">/</span> <span class="nx">num</span><span class="p">)</span> <span class="c1">// add product/element to output array</span>
+  <span class="k">return</span> <span class="nx">output</span> <span class="c1">//return array</span>
+<span class="p">}</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`With division: </span><span class="p">${</span><span class="nx">division</span><span class="p">(</span><span class="nx">arr</span><span class="p">)}</span><span class="s2">`</span><span class="p">)</span> <span class="c1">// output: 2,3,6</span>
+
+</code></pre></div></div>
+<p>The product function will take in our array and multiply each of the elements to give us a total product. Division will divide the product by the element at the current
+index and add that value to the output array.</p>
+
+<h4 id="a-little-bit-harder">A little bit harder…</h4>
+<p>Now we want to try to do this without using division. I have not yet come up with a solution better than <strong>O(n^2)</strong>, but I’ll keep it in the back of my mind and publish an
+edit when I come up with one.
+<br /><br />
+Let’s figure out how we are going to structure this answer… We need to write a function which will take an array and and index to ignore when multiplying the values in
+the array. That doesn’t sound too hard, so let’s do it.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">multiply</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="c1">//define a function which takes an array and an index to ignore</span>
+  <span class="kd">let</span> <span class="nx">prod</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">//define a product value</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">lst</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//loop through indexes</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">===</span> <span class="nx">index</span><span class="p">)</span> <span class="c1">//if ignored index, don't multiply</span>
+      <span class="k">continue</span> <span class="c1">//skip loop iteration</span>
+    <span class="nx">prod</span> <span class="o">*=</span> <span class="nx">lst</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="c1">//increase product</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">prod</span> <span class="c1">//return product</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Here we have a function which will loop through the array and anytime it is at the passed index it will simply skip that step and continue with
+the process of multiplying the values. It will then return the product. Notice I made use of the <code class="language-plaintext highlighter-rouge">continue</code> keyword here, much to the chagrin
+of all my past CS professors, but they can’t take off style points here. HAHA! This could also have been accomplished by using an if statement or
+even a ternary statement if you are really feeling feisty, but this is the implementation I chose. Anyway, we now just need a function which adds
+each of these values to an output array, much like the first implementation.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">noDivision</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">output</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">//define an empty output array</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">lst</span><span class="p">)</span> <span class="c1">//loop through indexes</span>
+    <span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">multiply</span><span class="p">(</span><span class="nx">lst</span><span class="p">,</span> <span class="nx">i</span><span class="p">))</span> <span class="c1">//append the result of multiply()</span>
+  <span class="k">return</span> <span class="nx">output</span> <span class="c1">//return our new array</span>
+<span class="p">}</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Answer without division: </span><span class="p">${</span><span class="nx">noDivision</span><span class="p">(</span><span class="nx">arr</span><span class="p">)}</span><span class="s2">`</span><span class="p">)</span> <span class="c1">// output: 2,3,6</span>
+</code></pre></div></div>
+<p>And there we have it. A solution to the challenge portion of the problem, which returns the same values as the simpler implementation.
+I guess I’ll call this a succes if this is supposedly a <strong>[Hard]</strong> problem</p>
+
+<p>So yeah… I’ll see you in the next one</p>
+
+<h2 id="edit">Edit:</h2>
+<p>It has been brought to my attention that the challenge part of this question <em>can</em> be completed in <strong>O(n)</strong> by looping through the array
+twice. The first time from front to back, assigning the value before calculating the product, and then doing the same thing again from
+back to front. It should look something like this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="kd">const</span> <span class="nx">firstPass</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">product</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="kd">let</span> <span class="nx">output</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">num</span> <span class="k">of</span> <span class="nx">lst</span><span class="p">){</span>
+    <span class="nx">output</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">product</span><span class="p">)</span> <span class="c1">// add product to array</span>
+    <span class="nx">product</span><span class="o">*=</span><span class="nx">num</span> <span class="c1">// scale product</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">output</span> <span class="c1">// return output</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">secondPass</span> <span class="o">=</span> <span class="p">(</span><span class="nx">lst</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">product</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">lst</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">){</span> <span class="c1">// loop through array backwards</span>
+    <span class="nx">lst</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="o">*=</span><span class="nx">product</span> <span class="c1">// multiply current value by the product</span>
+    <span class="nx">product</span><span class="o">=</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="c1">// scale the product</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">lst</span> <span class="c1">//return outpur</span>
+<span class="p">}</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">secondPass</span><span class="p">(</span><span class="nx">firstPass</span><span class="p">(</span><span class="nx">arr</span><span class="p">)))</span> <span class="c1">// outputL 2,3,6</span>
+</code></pre></div></div>
+
+<p>I can’t claim credit for this algorithm, as I did not come up with it on my own, but I said I would update this post if
+I found an <strong>O(n)</strong> solution, so here it is.</p>
+
+<p>See ya in the next one…</p>
+
+
+            </div>
+
+            <!--- DIVIDING LINE -->
+            <hr>
+
+            <!-- POST TAGS -->
+            <div class="inline-tags">
+                <span>
+                    
+                        <a href="/tags/#thesequelnoonesawcoming">#thesequelnoonesawcoming&nbsp;&nbsp;&nbsp;</a>
+                    
+                </span>
+            </div>
+
+            <br>
+
+            <!-- POST DATE -->
+            <div class="post-date">
+                March 10 2021
+            </div>
+        </article>
+    </div>
+</body>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-wrapper">
+        <footer role="contentinfo">
+            <span>
+    &copy; 2021 Stefan T. Heller.
+</span>
+
+        </footer>
+    </div>
+</footer>
+</html>

@@ -1,0 +1,224 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+<title>Today I take advantage of a cheeky bugger called JSON &#8211; Stefan T. Heller</title>
+<meta name="description" content="A site about my daily activities, musings, and experiences">
+<meta name="keywords" content="JSONforthewin">
+
+<!-- MathJax -->
+<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Today I take advantage of a cheeky bugger called JSON">
+<meta property="og:description" content="A site about my daily activities, musings, and experiences">
+<meta property="og:url" content="/posts/2021-03-11/Today-I-take-advantage-of-JSON.html">
+<meta property="og:site_name" content="Stefan T. Heller">
+
+
+
+
+
+<link rel="canonical" href="/posts/2021-03-11/Today-I-take-advantage-of-JSON.html">
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Stefan T. Heller Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<!-- Webfonts -->
+<link href="//fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic" rel="stylesheet" type="text/css">
+
+<meta http-equiv="cleartype" content="on">
+
+
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+
+    <!-- HEADER IMAGE -->
+    <!-- <center>
+        <span class="main-header-image">
+            <a href="/"><img src="/images/header/clean-and-simple-header.jpg"></a>
+        </span>
+    </center> -->
+    <br>
+    <center>
+        <span class="main-header-image">
+            <h1 style="font-weight:100; font-kerning:normal"><a href="/">Stefan T. Heller</a></h1>
+        </span>
+    </center>
+
+    <!-- NAVIGATION -->
+    <br>
+    <center>
+    <nav class="header-nav">
+        <ul class="navigation-bar">
+            <li><a href="/">HOME</a></li>
+            <li><a href="/blog/">BLOG</a></li>
+            <li><a href="/about/">ABOUT</a></li>
+            <li><a href="/resume/">RESUME</a></li>
+        </ul>
+    </nav>
+</center>
+
+</head>
+
+<!-- BODY -->
+<body id="post-index">
+    <!--[if lt IE 9]><div class="upgrade"><strong><a href="http://whatbrowser.org/">Your browser is quite old!</strong> Why not upgrade to a different browser to better enjoy this site?</a></div><![endif]-->
+
+    <div id="main" role="main">
+        <article class="hentry">
+
+            <div class="featured-image">
+            <img src="" style="width:100%">
+            </div>
+
+            <!-- MAIN -->
+            <h1 class="entry-title">
+                <a>Today I take advantage of a cheeky bugger called JSON</a>
+            </h1>
+            <h3 class="entry-subtitle">
+                <a href="" rel="bookmark" title="" itemprop="url"></a>
+            </h3>
+
+            <hr>
+
+            <!-- POST CONTENT -->
+            <div class="entry-content">
+                <h1 id="day-3-problem-3">Day 3 Problem 3</h1>
+<p>Today’s problem takes a turn away from the past 2. Now, instead of having a problem involving array manipulation, we need to deserialize
+and serialize methods for a binary tree. Here’s the problem they give us:</p>
+<blockquote>
+  <p>Given the root to a binary tree, implement serialize(root), which serializes the tree into a string, and deserialize(s), which deserializes the string back into the tree.
+For example, given the following Node class</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+</code></pre></div></div>
+<p>The following test should pass:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s">'root'</span><span class="p">,</span> <span class="n">Node</span><span class="p">(</span><span class="s">'left'</span><span class="p">,</span> <span class="n">Node</span><span class="p">(</span><span class="s">'left.left'</span><span class="p">)),</span> <span class="n">Node</span><span class="p">(</span><span class="s">'right'</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="n">node</span><span class="p">))</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="s">'left.left'</span>
+</code></pre></div></div>
+
+<p>As I mentioned before, the goal of what I am doing with these problems is to sharpen my JavaScript skills, so while I could answer this problem in
+Python (which is the language the class is given in), I would prefer to transfer it to JavaScript. So here is our linked list class redefined in
+JavaScript:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Node</span><span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">left</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">right</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>I am actually going to make some modifications to this declaration in order to solve the problem, but we’ll get to that. In summary what we have here
+is a basic binary search tree with each node having a value, left node, and a right node. Now it’s time to break the problem down.</p>
+
+<h2 id="whats-the-goal">What’s the goal?</h2>
+<p>Be able to serialize and deserialize a tree with no loss of information</p>
+
+<h2 id="whats-the-input">What’s the input?</h2>
+<p>The input is a tree which has been predefined for us, and we want to match it to the output of deserialize after it has been serialized</p>
+
+<h2 id="how-are-we-going-to-solve-this">How are we going to solve this?</h2>
+<p>Well, the way I would solve this if, I wasn’t working in JavaScript, would be to recurse through the tree, adding the
+“value” from the current node in the tree to a string with some character to seperate the values. I would the use a Regular
+Expression to read the string and create the appropriate nodes, thus deserializing the string and recreating the tree.
+But… because we’re working in JavaScript, the language of reb requests and serialization, we can just use the built in
+JSON functions.
+<br />
+So let’s take advantage of the JSON functions stringify() and parse. We can add a toString() function to the Node class
+to make the code cleaner. The implamentation should look something like this:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Node</span><span class="p">{</span> <span class="c1">//define our node class</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">left</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">right</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">toString</span><span class="p">()</span> <span class="p">{</span> <span class="c1">//define a toString method which uses built in JSON.stringify</span>
+    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">serialize</span> <span class="o">=</span> <span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">node</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="c1">// serialize simply calls JSON.stringify on the object</span>
+<span class="kd">const</span> <span class="nx">deserialize</span> <span class="o">=</span> <span class="p">(</span><span class="nx">serializedNode</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">serializedNode</span><span class="p">)</span> <span class="c1">// deserialize calls JSON.parse() on the serialized string</span>
+
+<span class="kd">let</span> <span class="nx">node</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span> <span class="c1">//create the input node</span>
+  <span class="dl">"</span><span class="s2">root</span><span class="dl">"</span><span class="p">,</span>
+  <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="dl">"</span><span class="s2">left</span><span class="dl">"</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="dl">"</span><span class="s2">left.left</span><span class="dl">"</span><span class="p">)),</span>
+  <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="dl">"</span><span class="s2">right</span><span class="dl">"</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">deserialize</span><span class="p">(</span><span class="nx">serialize</span><span class="p">(</span><span class="nx">node</span><span class="p">)).</span><span class="nx">left</span><span class="p">.</span><span class="nx">left</span><span class="p">.</span><span class="nx">val</span><span class="p">)</span> <span class="c1">// outputs left.left</span>
+</code></pre></div></div>
+
+<p>So what’s happening here? We add a toString() to Node which simply returns the JSON.stringify() when called on our node.
+We define a serialize const which is equal to the output of the toString() called on the node. We then define a const
+deserialize which equals an arrow function which returns the result of JSON.parse() on the serialized string. This simply
+returns a Node object. We can then create an instance of our Node class with the params given by the prompt. We log the output
+and find that we get the exact output we want.</p>
+
+<h3 id="acknowledge-some-issues">Acknowledge some issues</h3>
+<p>This may seem like a bit of a cop out… We didn’t actually write anything complex to handle this <strong>[Medium]</strong> problem, but
+these functions are an integral part of JavaScript and learning JavaScript is the driving factor for this series, so I’m going
+to allow it.</p>
+
+<p>I’ll see you in the next one… Maybe I’ll actually write some code for that one.</p>
+
+            </div>
+
+            <!--- DIVIDING LINE -->
+            <hr>
+
+            <!-- POST TAGS -->
+            <div class="inline-tags">
+                <span>
+                    
+                        <a href="/tags/#JSONforthewin">#JSONforthewin&nbsp;&nbsp;&nbsp;</a>
+                    
+                </span>
+            </div>
+
+            <br>
+
+            <!-- POST DATE -->
+            <div class="post-date">
+                March 11 2021
+            </div>
+        </article>
+    </div>
+</body>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-wrapper">
+        <footer role="contentinfo">
+            <span>
+    &copy; 2021 Stefan T. Heller.
+</span>
+
+        </footer>
+    </div>
+</footer>
+</html>

@@ -1,0 +1,85 @@
+I"�&<h1 id="day-3-problem-3">Day 3 Problem 3</h1>
+<p>Today’s problem takes a turn away from the past 2. Now, instead of having a problem involving array manipulation, we need to deserialize
+and serialize methods for a binary tree. Here’s the problem they give us:</p>
+<blockquote>
+  <p>Given the root to a binary tree, implement serialize(root), which serializes the tree into a string, and deserialize(s), which deserializes the string back into the tree.
+For example, given the following Node class</p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+</code></pre></div></div>
+<p>The following test should pass:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s">'root'</span><span class="p">,</span> <span class="n">Node</span><span class="p">(</span><span class="s">'left'</span><span class="p">,</span> <span class="n">Node</span><span class="p">(</span><span class="s">'left.left'</span><span class="p">)),</span> <span class="n">Node</span><span class="p">(</span><span class="s">'right'</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">deserialize</span><span class="p">(</span><span class="n">serialize</span><span class="p">(</span><span class="n">node</span><span class="p">))</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="s">'left.left'</span>
+</code></pre></div></div>
+
+<p>As I mentioned before, the goal of what I am doing with these problems is to sharpen my JavaScript skills, so while I could answer this problem in
+Python (which is the language the class is given in), I would prefer to transfer it to JavaScript. So here is our linked list class redefined in
+JavaScript:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Node</span><span class="p">{</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">left</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">right</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>I am actually going to make some modifications to this declaration in order to solve the problem, but we’ll get to that. In summary what we have here
+is a basic binary search tree with each node having a value, left node, and a right node. Now it’s time to break the problem down.</p>
+
+<h2 id="whats-the-goal">What’s the goal?</h2>
+<p>Be able to serialize and deserialize a tree with no loss of information</p>
+
+<h2 id="whats-the-input">What’s the input?</h2>
+<p>The input is a tree which has been predefined for us, and we want to match it to the output of deserialize after it has been serialized</p>
+
+<h2 id="how-are-we-going-to-solve-this">How are we going to solve this?</h2>
+<p>Well, the way I would solve this if, I wasn’t working in JavaScript, would be to recurse through the tree, adding the
+“value” from the current node in the tree to a string with some character to seperate the values. I would the use a Regular
+Expression to read the string and create the appropriate nodes, thus deserializing the string and recreating the tree.
+But… because we’re working in JavaScript, the language of reb requests and serialization, we can just use the built in
+JSON functions.
+<br />
+So let’s take advantage of the JSON functions stringify() and parse. We can add a toString() function to the Node class
+to make the code cleaner. The implamentation should look something like this:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">Node</span><span class="p">{</span> <span class="c1">//define our node class</span>
+  <span class="kd">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">left</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">right</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">toString</span><span class="p">()</span> <span class="p">{</span> <span class="c1">//define a toString method which uses built in JSON.stringify</span>
+    <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">serialize</span> <span class="o">=</span> <span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">node</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span> <span class="c1">// serialize simply calls JSON.stringify on the object</span>
+<span class="kd">const</span> <span class="nx">deserialize</span> <span class="o">=</span> <span class="p">(</span><span class="nx">serializedNode</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">serializedNode</span><span class="p">)</span> <span class="c1">// deserialize calls JSON.parse() on the serialized string</span>
+
+<span class="kd">let</span> <span class="nx">node</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span> <span class="c1">//create the input node</span>
+  <span class="dl">"</span><span class="s2">root</span><span class="dl">"</span><span class="p">,</span>
+  <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="dl">"</span><span class="s2">left</span><span class="dl">"</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="dl">"</span><span class="s2">left.left</span><span class="dl">"</span><span class="p">)),</span>
+  <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="dl">"</span><span class="s2">right</span><span class="dl">"</span><span class="p">)</span>
+<span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">deserialize</span><span class="p">(</span><span class="nx">serialize</span><span class="p">(</span><span class="nx">node</span><span class="p">)).</span><span class="nx">left</span><span class="p">.</span><span class="nx">left</span><span class="p">.</span><span class="nx">val</span><span class="p">)</span> <span class="c1">// outputs left.left</span>
+</code></pre></div></div>
+
+<p>So what’s happening here? We add a toString() to Node which simply returns the JSON.stringify() when called on our node.
+We define a serialize const which is equal to the output of the toString() called on the node. We then define a const
+deserialize which equals an arrow function which returns the result of JSON.parse() on the serialized string. This simply
+returns a Node object. We can then create an instance of our Node class with the params given by the prompt. We log the output
+and find that we get the exact output we want.</p>
+
+<h3 id="acknowledge-some-issues">Acknowledge some issues</h3>
+<p>This may seem like a bit of a cop out… We didn’t actually write anything complex to handle this <strong>[Medium]</strong> problem, but
+these functions are an integral part of JavaScript and learning JavaScript is the driving factor for this series, so I’m going
+to allow it.</p>
+
+<p>I’ll see you in the next one… Maybe I’ll actually write some code for that one.</p>
+:ET
